@@ -47,14 +47,14 @@ class Magazine():
 			print("Found %s" % (inp))
 			#resp = json.load(inp)
 
-		for i in resp['items']:
-			if i['id']['kind'] == "youtube#video":
-				video_links.append(base_video_url + i['id']['videoId'])
-			try:
-				next_page_token = resp['nextPageToken']
-				url = first_url + '&pageToken={}'.format(next_page_token)
-			except:
-				break
+			for i in resp['items']:
+				if i['id']['kind'] == "youtube#video":
+					video_links.append(base_video_url + i['id']['videoId'])
+				try:
+					next_page_token = resp['nextPageToken']
+					url = first_url + '&pageToken={}'.format(next_page_token)
+				except:
+					break
 		return video_links
 
 			
