@@ -6,7 +6,6 @@ I wanted a list of the various instances of "The first rule of warfare is..." fr
 
 * Python 3
 * requests:  [https://2.python-requests.org/en/master/#](https://2.python-requests.org/en/master/#)
-* 
 
 ## Usage:
 
