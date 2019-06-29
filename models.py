@@ -21,7 +21,7 @@ class Magazine():
 	
 	def __init__(self, channel_id=""):
 		self._channel_id = channel_id
-		self.api_key = "LOL YEA GO FUCK YERSELF"
+		self.api_key = "LOL YEA RIGHT"
 		self.payload = []
 
 	def parse_video_id(self, video_string=""):
@@ -43,7 +43,7 @@ class Magazine():
 		print("Fetching meta for %s" % (url))
 		while True:
 			inp = requests.get(url).text
-			mapping = resp = json.dumps(inp)
+			resp = json.dumps(inp)
 			print("Found %s" % (inp))
 			#resp = json.load(inp)
 
