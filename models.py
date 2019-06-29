@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-class Operator(xml.sax.ContentHandler):
+class Operator():
 	def __init__(self):
 		self.current_data = ""
 		self.orders = ""
@@ -18,36 +18,34 @@ class Magazine():
 	"""
 		An object for retrieving a list of videos on a YouTube channel.
 	"""
-	def __init__(self, channel_string=""):
-		self.channel_string = channel_string
-		self.api_key = "YEET"
+	
+	def __init__(self, channel_id=""):
+		self._channel_id = channel_id
+		self.api_key = "LOL YEA GO FUCK YERSELF"
 		self.payload = []
 
-	@property
-	def channel_string(self):
-		return self._channel_string
-
-	def get_channel_id(self):
-		return self.channel_string.replace("https://www.youtube.com/channel/", "").strip()
-
-	def self.parse_video_id(self, video_string=""):
+	def parse_video_id(self, video_string=""):
 		return video_string.replace("https://www.youtube.com/watch?v=", "")
 
-	def get_all_videos_in_channel(channel_id):
+	def get_all_videos_in_channel(self, channel_id):
 		import urllib
 		import json
+		import requests
 		api_key = self.api_key
 
 		base_video_url = 'https://www.youtube.com/watch?v='
 		base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
 
-		first_url = base_search_url + 'key={}&channelId={}&part=snippet,id&order=date&maxResults=25'.format(self.api_key, self.get_channel_id())
+		first_url = base_search_url + 'key={}&channelId={}&part=snippet,id&order=date&maxResults=25'.format(self.api_key, channel_id)
 
 		video_links = []
 		url = first_url
+		print("Fetching meta for %s" % (url))
 		while True:
-			inp = urllib.urlopen(url)
-			resp = json.load(inp)
+			inp = requests.get(url).text
+			mapping = resp = json.dumps(inp)
+			print("Found %s" % (inp))
+			#resp = json.load(inp)
 
 		for i in resp['items']:
 			if i['id']['kind'] == "youtube#video":
@@ -58,6 +56,7 @@ class Magazine():
 			except:
 				break
 		return video_links
+
 			
 
 class Ammunition(object):
@@ -88,13 +87,13 @@ class Ammunition(object):
 	def prime(self):
 		if v is not None:
 			parser = commander.make_parser()
-			parser.setFeature(xml.sax.handler.feature_namespaces, 0)
+			parser.setFeature(commander.handler.feature_namespaces, 0)
 			operator = Operator()
 			parser.setContentHandler(operator)
 
 			parser.parse(self.target)
 
-			retrun True
+			return True
 
 		else:
 			return False

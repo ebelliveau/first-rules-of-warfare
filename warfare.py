@@ -14,17 +14,34 @@
 '''
 
 from models import Magazine, Ammunition
+import sys, re
 
+def get_channel_id(channel_string=""):
+	return channel_string.replace("https://www.youtube.com/channel/", "").strip()
 
 def main():
-	mag = Magazine("https://www.youtube.com/channel/UCZFipeZtQM5CKUjx6grh54g")
-	mag.load()
+	channel_id = get_channel_id("https://www.youtube.com/channel/UCZFipeZtQM5CKUjx6grh54g")
+	mag = Magazine(channel_id=channel_id)
+	
 
-	for video in mag.list_all():
+	for video in mag.get_all_videos_in_channel(channel_id=channel_id):
 		ammo = Ammunition(v=video.v, lang="en")
-		ammo.prime()
-
 		
+		if ammo.prime() is True:
+			pattern = "((\[Tt\]he first rule of warfare)+[\ A-Za-z,\.\;\"\']+\.)"
+			spread = re.match(ammo.payload, pattern)
+
+			if spread:
+				emissions = re.findall(pattern, ammo.payload)
+				for munition in emissions:
+					print(munition)
+
+		else:
+			exc = "Cannot process channel information!"
+			print(exc)
+			sys.exit(exc)
+
+
 
 
 if __name__ == '__main__':
