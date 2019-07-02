@@ -25,10 +25,10 @@ def main():
 	
 
 	for video in mag.get_all_videos_in_channel(channel_id=channel_id):
-		ammo = Ammunition(v=video.v, lang="en")
+		ammo = Ammunition(v=video.split("?v=")[1], lang="en")
 		
 		if ammo.prime() is True:
-			pattern = "((\[Tt\]he first rule of warfare)+[\ A-Za-z,\.\;\"\']+\.)"
+			pattern = "((\[Tt\]he first rule of warfare)+[\ A-Za-z,\.\;\"\']+\.\ \ )"
 			spread = re.match(ammo.payload, pattern)
 
 			if spread:

@@ -33,20 +33,19 @@ class Magazine():
 		import requests
 		api_key = self.api_key
 
-		base_video_url = 'https://www.youtube.com/watch?v='
-		base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
+		base_video_url = "https://www.youtube.com/watch?v="
+		base_search_url = "https://www.googleapis.com/youtube/v3/search?"
 
 		first_url = base_search_url + 'key={}&channelId={}&part=snippet,id&order=date&maxResults=25'.format(self.api_key, channel_id)
 
 		video_links = []
 		url = first_url
-		print("Fetching meta for %s" % (url))
+		
 		while True:
-			inp = requests.get(url).text
-			resp = json.dumps(inp)
-			print("Found %s" % (inp))
-			#resp = json.load(inp)
+			print("Fetching meta for %s" % (url))
+			resp = requests.get(url).json()
 
+			#print(resp)
 			for i in resp['items']:
 				if i['id']['kind'] == "youtube#video":
 					video_links.append(base_video_url + i['id']['videoId'])
@@ -55,6 +54,8 @@ class Magazine():
 					url = first_url + '&pageToken={}'.format(next_page_token)
 				except:
 					break
+			#print(video_links)
+			break #break after one iteration to not kill the API rate limits
 		return video_links
 
 			
@@ -63,12 +64,12 @@ class Ammunition(object):
 	"""
 		An object for pulling down and parsing subtitle XML from YouTube's gdata API
 	"""
-	import xml.sax as commander
+	
 	def __init__(self, v="", lang="en"):
 		self._v = v
 		self._lang = lang
 		# Target = GData public URL to retrieve videoID's subtitles in XML format:
-		self._target = "http://video.google.com/timedtext?lang=%s&v=%s" % (self.v, self.lang)
+		self._target = "http://video.google.com/timedtext?lang=%s&v=%s" % (self.lang, self.v)
 		# Charge = eventually-parsed flat text of the target.
 		self.charge = ""
 
@@ -85,12 +86,15 @@ class Ammunition(object):
 		return self._target
 
 	def prime(self):
-		if v is not None:
+		import xml.sax as commander
+		if self.v is not None:
 			parser = commander.make_parser()
 			parser.setFeature(commander.handler.feature_namespaces, 0)
+			
 			operator = Operator()
-			parser.setContentHandler(operator)
 
+			parser.setContentHandler(operator)
+			print(self.target)
 			parser.parse(self.target)
 
 			return True
