@@ -1,19 +1,5 @@
 #!/usr/bin/env python
 
-
-class Operator():
-	def __init__(self):
-		self.current_data = ""
-		self.orders = ""
-
-
-	def startElement(self, tag, attributes):
-		self.current_data = tag
-
-		if self.current_data == "text":
-			self.orders += attributes["text"].replace(". ", ".  ") # Make sure proper sentences are brought together with ".  " to give us a splittable target for regex.
-
-
 class Magazine():
 	"""
 		An object for retrieving a list of videos on a YouTube channel.
@@ -21,7 +7,7 @@ class Magazine():
 	
 	def __init__(self, channel_id=""):
 		self._channel_id = channel_id
-		self.api_key = "LOL YEA RIGHT"
+		self.api_key = "AIzaSyCR5ob2qQEEpFyG4qdU9IUfa3UjolOBKqE"
 		self.payload = []
 
 	def parse_video_id(self, video_string=""):
@@ -41,7 +27,13 @@ class Magazine():
 		video_links = []
 		url = first_url
 		
-		while True:
+		limit = 100
+		round = 0
+
+		last_token = "start"
+		current_token = ""
+
+		while round < limit:
 			print("Fetching meta for %s" % (url))
 			resp = requests.get(url).json()
 
@@ -50,12 +42,17 @@ class Magazine():
 				if i['id']['kind'] == "youtube#video":
 					video_links.append(base_video_url + i['id']['videoId'])
 				try:
-					next_page_token = resp['nextPageToken']
+					next_page_token = current_token = resp['nextPageToken']
 					url = first_url + '&pageToken={}'.format(next_page_token)
+					if current_token is last_token:
+						round = limit + 1
 				except:
+					round = limit + 1
 					break
-			#print(video_links)
-			break #break after one iteration to not kill the API rate limits
+			round += 1
+			last_token = current_token
+			print(video_links)
+			#break #break after one iteration to not kill the API rate limits
 		return video_links
 
 			
@@ -69,7 +66,7 @@ class Ammunition(object):
 		self._v = v
 		self._lang = lang
 		# Target = GData public URL to retrieve videoID's subtitles in XML format:
-		self._target = "http://video.google.com/timedtext?lang=%s&v=%s" % (self.lang, self.v)
+		self._target = "https://www.youtube.com/api/timedtext?v=%s&hl=%s&lang=%s&fmt=srv3" % (self.v, self.lang, self.lang)
 		# Charge = eventually-parsed flat text of the target.
 		self.charge = ""
 
@@ -86,17 +83,13 @@ class Ammunition(object):
 		return self._target
 
 	def prime(self):
-		import xml.sax as commander
-		if self.v is not None:
-			parser = commander.make_parser()
-			parser.setFeature(commander.handler.feature_namespaces, 0)
+
+		from lxml import etree as commander
+
+		if self.v is not None and self.charge.strip() is not "":
+			tree = commander.parse(self.target)
+			self.charge = commander.tostring(tree, encoding='utf8', method='text')
 			
-			operator = Operator()
-
-			parser.setContentHandler(operator)
-			print(self.target)
-			parser.parse(self.target)
-
 			return True
 
 		else:
