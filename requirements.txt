@@ -1,0 +1,15 @@
+boltzmann==0.0.1
+certifi==2019.6.16
+chainside-btcpy==0.6.4
+chardet==3.0.4
+ecdsa==0.13
+idna==2.8
+lxml==4.3.4
+mpmath==1.1.0
+numpy==1.16.4
+python-bitcoinrpc==1.0
+requests==2.22.0
+sortedcontainers==2.1.0
+sympy==1.4
+urllib3==1.25.3
+virtualenv==16.6.2

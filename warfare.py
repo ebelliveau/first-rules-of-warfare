@@ -25,6 +25,7 @@ def main():
 	
 
 	for video in mag.get_all_videos_in_channel(channel_id=channel_id):
+		print(video)
 		ammo = Ammunition(v=video.split("?v=")[1], lang="en")
 		
 		if ammo.prime() is True:
@@ -34,7 +35,7 @@ def main():
 			if spread:
 				emissions = re.findall(pattern, ammo.payload)
 				for munition in emissions:
-					print(munition)
+					print("Munition:  ", munition)
 
 		else:
 			exc = "Cannot process channel information!"

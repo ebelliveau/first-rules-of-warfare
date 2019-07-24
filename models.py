@@ -7,7 +7,11 @@ class Magazine():
 	
 	def __init__(self, channel_id=""):
 		self._channel_id = channel_id
+<<<<<<< HEAD
 		self.api_key = "AIzaSyCR5ob2qQEEpFyG4qdU9IUfa3UjolOBKqE"
+=======
+		self.api_key = "LOL YEA RIGHT"
+>>>>>>> 914b14f... Interim commit while I wait out the GData API restrictions.
 		self.payload = []
 
 	def parse_video_id(self, video_string=""):
@@ -30,30 +34,54 @@ class Magazine():
 		limit = 100
 		round = 0
 
-		last_token = "start"
 		current_token = ""
+
+		tokens_encountered = []
 
 		while round < limit:
 			print("Fetching meta for %s" % (url))
+			print("Round = %d" % (round))
 			resp = requests.get(url).json()
+
+			print(resp)
 
 			#print(resp)
 			for i in resp['items']:
-				if i['id']['kind'] == "youtube#video":
-					video_links.append(base_video_url + i['id']['videoId'])
 				try:
-					next_page_token = current_token = resp['nextPageToken']
-					url = first_url + '&pageToken={}'.format(next_page_token)
-					if current_token is last_token:
-						round = limit + 1
-				except:
-					round = limit + 1
+					if i['id']['kind'] == "youtube#video":
+						video_links.append(base_video_url + i['id']['videoId'])
+				except Exception as ex:
+					print("Exception encountered in parsing video items:  %s" % (ex))
+					round += 1
 					break
+<<<<<<< HEAD
 			round += 1
 			last_token = current_token
 			print(video_links)
+=======
+
+			try:
+				next_page_token = resp['nextPageToken']
+				if next_page_token in tokens_encountered:
+					print("Found the same token!!!")
+					print(next_page_token, tokens_encountered, len(tokens_encountered))
+					round = limit+1
+					break
+				url = first_url + '&pageToken={}'.format(next_page_token)
+
+				tokens_encountered.append(next_page_token)
+
+			except Exception as ex:
+				print("Exception encountered:  %s " % (ex))
+				round = limit+1
+			
+			for link in video_links:
+				print(link.split("v=")[1])
+>>>>>>> 914b14f... Interim commit while I wait out the GData API restrictions.
 			#break #break after one iteration to not kill the API rate limits
-		return video_links
+			round += 1
+		self.payload.append(video_links)
+		return sorted(set(self.payload)) #sorted(set(video_links))
 
 			
 
