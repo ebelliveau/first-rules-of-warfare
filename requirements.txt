@@ -2,7 +2,7 @@ boltzmann==0.0.1
 certifi==2019.6.16
 chainside-btcpy==0.6.4
 chardet==3.0.4
-ecdsa==0.13
+ecdsa==0.13.3
 idna==2.8
 lxml==4.3.4
 mpmath==1.1.0
