@@ -11,5 +11,5 @@ python-bitcoinrpc==1.0
 requests==2.22.0
 sortedcontainers==2.1.0
 sympy==1.4
-urllib3==1.25.3
+urllib3==1.26.5
 virtualenv==16.6.2
