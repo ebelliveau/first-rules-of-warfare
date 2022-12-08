@@ -1,5 +1,5 @@
 boltzmann==0.0.1
-certifi==2019.6.16
+certifi==2022.12.7
 chainside-btcpy==0.6.4
 chardet==3.0.4
 ecdsa==0.13.3
